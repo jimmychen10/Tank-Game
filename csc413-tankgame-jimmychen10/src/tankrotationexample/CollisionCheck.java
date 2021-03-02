@@ -22,17 +22,29 @@ public class CollisionCheck {
     public CollisionCheck(){
 
     }
-    public boolean collision_bullet_with_nonwall(Projectile b, NonBreakableWall w){
-        this.nonBreakableWall= new Rectangle(w.getX(),w.getY(),w.getImg().getWidth(),w.getImg().getHeight());
+    public boolean collision_bullet_with_nonwall(Projectile b, NonBreakableWall w) {
+        this.nonBreakableWall = new Rectangle(w.getX(), w.getY(), w.getImg().getWidth(), w.getImg().getHeight());
+        this.bullet = new Rectangle(b.getX(), b.getY(), b.getImg().getWidth(), b.getImg().getHeight());
 
-        this.bullet = new Rectangle(b.getX(),b.getY(),b.getImg().getWidth(),b.getImg().getHeight());
-
-        if (this.bullet.intersects(this.nonBreakableWall)){
+        if (this.bullet.intersects(this.nonBreakableWall)) {
             return true;
         }
-        else{
+        else {
             return false;
         }
+    }
+        public boolean collision_bullet_with_tank(Projectile b, Tank t1){
+
+
+            this.bullet = new Rectangle(b.getX(),b.getY(),b.getImg().getWidth(),b.getImg().getHeight());
+            this.t1= new Rectangle(t1.getX(),t1.getY(),t1.getImg().getWidth(),t1.getImg().getHeight());
+
+            if (this.bullet.intersects(this.t1)){
+                return true;
+            }
+            else{
+                return false;
+            }
 
     }
     public boolean collision_bullet_with_wall(Projectile b, BreakableWall w){
@@ -49,6 +61,7 @@ public class CollisionCheck {
 
     }
 
+
     public boolean collision_tank_with_tank(Tank t1, Tank t2){
 
         this.t1= new Rectangle(t1.getX(),t1.getY(),t1.getImg().getWidth(),t1.getImg().getHeight());
@@ -61,6 +74,32 @@ public class CollisionCheck {
         else{
             return false;
         }
+    }
+    public boolean collision_tank_with_bwall(Tank t1, BreakableWall w ){
+        this.t1= new Rectangle(t1.getX(),t1.getY(),t1.getImg().getWidth(),t1.getImg().getHeight());
+        this.breakableWall= new Rectangle(w.getX(),w.getY(),w.getImg().getWidth(),w.getImg().getHeight());
+
+        if(this.t1.intersects(this.breakableWall)){
+
+            return true ;
+        }
+        else{
+            return false;
+        }
+
+    }
+    public boolean collision_tank_with_nbwall(Tank t1, NonBreakableWall w ){
+        this.t1= new Rectangle(t1.getX(),t1.getY(),t1.getImg().getWidth(),t1.getImg().getHeight());
+        this.nonBreakableWall= new Rectangle(w.getX(),w.getY(),w.getImg().getWidth(),w.getImg().getHeight());
+
+        if(this.t1.intersects(this.nonBreakableWall)){
+
+            return true ;
+        }
+        else{
+            return false;
+        }
+
     }
 
 

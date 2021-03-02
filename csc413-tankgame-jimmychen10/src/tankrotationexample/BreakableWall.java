@@ -50,6 +50,9 @@ public class BreakableWall extends Walls {
         g2d.drawImage(this.img, rotation, null);
 
 
+
+
+
     }
 
 

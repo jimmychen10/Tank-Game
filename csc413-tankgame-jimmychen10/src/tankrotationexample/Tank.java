@@ -19,10 +19,17 @@ public class Tank{
     private int vy;
     private int angle;
 
+    private int health;
+    private int lives;
+
     private final int R = 2;
     private final int ROTATIONSPEED = 4;
 
     private CollisionCheck collision;
+
+
+
+    private boolean collide_with_immovable_object = false;
 
 
 
@@ -41,8 +48,8 @@ public class Tank{
     private boolean LeftPressed;
     private boolean ShootPressed;
     Rectangle tank_box;
-    Rectangle tank_left_side;
-    Rectangle tank_right_side;
+    Rectangle health_bar;
+    Rectangle lives_bar;
     Rectangle tank_front_side;
     Rectangle tank_back_side;
 
@@ -55,13 +62,12 @@ public class Tank{
         this.img = img;
         this.bullet = bullet;
         this.angle = angle;
-
-      this.tank_box = new Rectangle(this.x,this.y,this.img.getWidth(),this.img.getHeight());
-
-//        this.tank_front_side = new Rectangle(this.x+1,this.y,this.img.getWidth()-2, 1);
-//        this.tank_back_side = new Rectangle(this.x+1,this.y + this.img.getWidth()-2,this.img.getWidth()-2, 1);
-//        this.tank_left_side = new Rectangle(this.x+1,this.y,this.img.getWidth()-2, 1);
-//        this.tank_right_side = new Rectangle(this.x+this.img.getWidth()-2,this.y+1,1, this.img.getHeight()-2);
+        this.health = 100;
+        this.lives = 3;
+        this.tank_box = new Rectangle(this.x,this.y,this.img.getWidth(),this.img.getHeight());
+        this.health_bar = new Rectangle(this.x,this.y+50,this.img.getWidth(),this.img.getHeight());
+//
+//        this.tank_box = new Rectangle(this.x,this.y,this.img.getWidth(),this.img.getHeight());
 
     }
 
@@ -101,6 +107,7 @@ public class Tank{
     void shootProjectile() {
         this.ShootPressed = true;
         TRE.projectiles.add(new Projectile(x,y,vx,vy,angle,bullet));
+        System.out.println("projectile angle"+ angle);
 
     }
     void unProjectile() {
@@ -129,9 +136,6 @@ public class Tank{
 
     private void rotateLeft() {
         this.angle -= this.ROTATIONSPEED;
-//        if(tank_left_side.intersects(NonBreakableWall.wall)){
-//            this.angle += this.ROTATIONSPEED;
-//        }
     }
 
     private void rotateRight() {
@@ -141,18 +145,36 @@ public class Tank{
     private void moveBackwards() {
         vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
         vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
+
+        if(collide_with_immovable_object){
+            x = x + 4*vx;
+            y = y + 4*vy;
+            collide_with_immovable_object = false;
+        }
         x -= vx;
         y -= vy;
         checkBorder();
+
     }
 
     private void moveForwards() {
         vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
         vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
-        x += vx;
-        y += vy;
+        if(collide_with_immovable_object){
+            x = x - 4*vx;
+            y = y - 4*vy;
+//            x-=vx;
+//            y-=vy;
+            collide_with_immovable_object = false;
+        }else{
+            x += vx;
+            y += vy;
+        }
+
+//        System.out.println("x:"+x);
+//        System.out.println("y"+ y);
         checkBorder();
-        if(collision.collision_tank_with_tank(this.tank_box, ))
+
     }
 
 
@@ -162,14 +184,14 @@ public class Tank{
         if (x < 30) {
             x = 30;
         }
-        if (x >= TRE.SCREEN_WIDTH - 88) {
-            x = TRE.SCREEN_WIDTH - 88;
+        if (x >= TRE.WORLD_WIDTH - 88) {
+            x = TRE.WORLD_WIDTH - 88;
         }
         if (y < 40) {
             y = 40;
         }
-        if (y >= TRE.SCREEN_HEIGHT - 80) {
-            y = TRE.SCREEN_HEIGHT - 80;
+        if (y >= TRE.WORLD_HEIGHT - 80) {
+            y = TRE.WORLD_HEIGHT - 80;
         }
     }
 
@@ -193,6 +215,21 @@ public class Tank{
         return angle;
     }
 
+
+    public void damage(Projectile b){
+        this.health -= b.getDamage();
+    }
+
+    public boolean getCollide_with_tank() {
+        return collide_with_immovable_object;
+    }
+
+
+    public void setCollide_with_immovable_object(boolean collide_with_immovable_object) {
+        this.collide_with_immovable_object = collide_with_immovable_object;
+    }
+
+
     public BufferedImage getImg() { return this.img; }
 
     @Override
@@ -208,6 +245,36 @@ public class Tank{
         g2d.drawImage(this.img, rotation, null);
         g.setColor(Color.red);
         g.drawRect(x,y,this.img.getWidth(), this.img.getHeight());
+
+        g.setColor(Color.red);
+        g.drawRect(x,y,this.img.getWidth(), this.img.getHeight());
+
+        if(this.health <= 0 ){
+            if(this.lives>=0){
+                this.lives -=1;
+                this.health = 100;
+            }
+
+        }
+
+        if(this.health >70){
+            g.setColor(Color.green);
+        }
+        else if(this.health >30){
+            g.setColor(Color.yellow);
+        }
+        else{
+            g.setColor(Color.red);
+        }
+
+        g.fillRect(x,y+50,this.health/2, this.img.getHeight()/2/2);
+        // this.img.getWidth() ----> 50
+        g.setColor(Color.cyan);
+
+
+        for(int i= 0; i<this.lives; i++){
+            g.fillOval(x+(i*(this.img.getHeight()/2/2)),y+65,this.img.getHeight()/2/2, this.img.getHeight()/2/2);
+        }
 
 
 

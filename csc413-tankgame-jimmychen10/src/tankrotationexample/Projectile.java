@@ -14,6 +14,9 @@ public class Projectile {
     private int vy;
     private int angle;
 
+
+    private int damage ;
+
     private final int R = 2;
 
 
@@ -32,6 +35,7 @@ public class Projectile {
         this.angle = angle;
 
         this.bullet = new Rectangle(this.x,this.y,this.img.getWidth(),this.img.getHeight());
+        this.damage = 10;
 
     }
 
@@ -57,6 +61,10 @@ public class Projectile {
         return this.img;
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", angle=" + angle;
@@ -71,9 +79,6 @@ public class Projectile {
         g2d.drawImage(this.img, rotation, null);
         moveForwards();
 
-//        if (this.bullet.intersects(Tank.tank_box)){
-//
-//        }
 
     }
 }
