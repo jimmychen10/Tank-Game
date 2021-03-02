@@ -10,12 +10,6 @@ import java.awt.Rectangle;
 
 public class BreakableWall extends Walls {
 
-    /**
-     *
-     * @author anthony-pc
-     */
-
-
     private int x;
     private int y;
     private BufferedImage img;
@@ -26,9 +20,6 @@ public class BreakableWall extends Walls {
         this.x = x;
         this.y = y;
         this.img = img;
-
-
-
     }
 
     public int getX() {
@@ -49,13 +40,7 @@ public class BreakableWall extends Walls {
 
         g2d.drawImage(this.img, rotation, null);
 
-
-
-
-
     }
-
-
 
 }
 

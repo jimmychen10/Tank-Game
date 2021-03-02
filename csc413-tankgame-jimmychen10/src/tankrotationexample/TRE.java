@@ -20,10 +20,6 @@ import java.util.Objects;
 
 import static javax.imageio.ImageIO.read;
 
-/**
- *
- * @author anthony-pc
- */
 public class TRE extends JPanel  {
 
 
@@ -64,10 +60,6 @@ public class TRE extends JPanel  {
                 trex.t1.update();
                 trex.t2.update();
                 trex.repaint();
-
-
-
-               // System.out.println(trex.t1);
                 Thread.sleep(1000 / 144);
             }
         } catch (InterruptedException ignored) {
@@ -89,25 +81,20 @@ public class TRE extends JPanel  {
         BufferedImage t1img = null, t2img = null, bullet= null,breakable_wall=null, wall = null;
         try {
 
-            System.out.println(System.getProperty("user.dir"));
-            /*
-             * note class loaders read files from the out folder (build folder in netbeans) and not the
-             * current working directory.
-             */
-            t1img = read(new File("resources/tank1.png"));
-            t2img = read(new File("resources/tank2.png"));
-            bullet = read(new File("resources/projectile.png"));
-            breakable_wall = read(new File("resources/wall2.gif"));
-            wall = read(new File("resources/wall1.gif"));
-
-           this.background = ImageIO.read(new File("resources/background.bmp")).getScaledInstance(WORLD_WIDTH,WORLD_HEIGHT,Image.SCALE_DEFAULT);
+            t1img = ImageIO.read(getClass().getResource("resources/tank1.png"));
+            t2img = ImageIO.read(getClass().getResource("resources/tank2.png"));
+            bullet = ImageIO.read(getClass().getResource("resources/projectile.png"));
+            breakable_wall = ImageIO.read(getClass().getResource("resources/wall2.gif"));
+            wall = ImageIO.read(getClass().getResource("resources/wall1.gif"));
+            
+           this.background = ImageIO.read(getClass().getResource("resources/background.bmp")).getScaledInstance(WORLD_WIDTH,WORLD_HEIGHT,Image.SCALE_DEFAULT);
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-      //  t1 = new Tank(200, 200, 0, 0, 0, t1img);
-        t1 = new Tank(200, 200, 0, 0, 0, t1img,bullet);
-        t2 = new Tank(1280 *2 - 200, 960 * 2 - 200, 0, 0, 180, t2img,bullet);
+
+        t1 = new Tank(200, 200, 0, 0, 0,"t1", t1img,bullet);
+        t2 = new Tank(1280 *2 - 200, 960 * 2 - 200, 0, 0, 180, "t2", t2img,bullet);
         projectiles = new ArrayList<Projectile>();
         nbwall = new ArrayList<NonBreakableWall>();
         bwall = new ArrayList<BreakableWall>();
@@ -246,20 +233,17 @@ public class TRE extends JPanel  {
             }
         }
         // Collision check projectile with tanks
-        // Problem is that the tank that shoots the projetile damages itself because the projectile spawns at where the player
-        // is located
-        //Comment this part to see projectiles
-//        for (int i = 0; i < projectiles.size(); i++) {
-//                if (collision.collision_bullet_with_tank(projectiles.get(i),this.t1)) {
-//                    this.t1.damage(projectiles.get(i));
-//                    projectiles.remove(i);
-//                }
-//                else if(collision.collision_bullet_with_tank(projectiles.get(i),this.t2)){
-//                    this.t2.damage(projectiles.get(i));
-//                    projectiles.remove(i);
-//
-//                }
-//        }
+       for (int i = 0; i < projectiles.size(); i++) {
+               if (collision.collision_bullet_with_tank(projectiles.get(i),this.t1) &&projectiles.get(i).getOwner() == "t2" ) {
+                   this.t1.damage(projectiles.get(i));
+                   projectiles.remove(i);
+               }
+               else if(collision.collision_bullet_with_tank(projectiles.get(i),this.t2) &&projectiles.get(i).getOwner() == "t1" ){
+                   this.t2.damage(projectiles.get(i));
+                   projectiles.remove(i);
+
+               }
+       }
 
         // Collision check with breakable wall with tank
         for (int i = 0; i < bwall.size(); i++){
@@ -279,8 +263,6 @@ public class TRE extends JPanel  {
                 this.t2.setCollide_with_immovable_object(true);
             }
         }
-
-
 
         // Collision check with a tank
         if(collision.collision_tank_with_tank(this.t1, this.t2)){
@@ -318,7 +300,7 @@ public class TRE extends JPanel  {
         if(player2_screen_x <= 0){
             player2_screen_x = 0;
         }
-        if(player2_screen_x >= WORLD_WIDTH -SCREEN_WIDTH/2){ //TRE.WORLD_WIDTH +SCREEN_WIDTH/2/2
+        if(player2_screen_x >= WORLD_WIDTH -SCREEN_WIDTH/2){ 
             player2_screen_x = WORLD_WIDTH -SCREEN_WIDTH/2;
         }
         if(player2_screen_y <= 0){
@@ -331,7 +313,7 @@ public class TRE extends JPanel  {
         if(player1_screen_x <= 0){
             player1_screen_x = 0;
         }
-        if(player1_screen_x >= WORLD_WIDTH -SCREEN_WIDTH/2){ //TRE.WORLD_WIDTH +SCREEN_WIDTH/2/2
+        if(player1_screen_x >= WORLD_WIDTH -SCREEN_WIDTH/2){ 
             player1_screen_x = WORLD_WIDTH -SCREEN_WIDTH/2;
         }
 

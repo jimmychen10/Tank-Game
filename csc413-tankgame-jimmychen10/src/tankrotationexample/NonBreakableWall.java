@@ -10,10 +10,6 @@ import java.awt.Rectangle;
 
 public class NonBreakableWall extends Walls {
 
-    /**
-     *
-     * @author anthony-pc
-     */
 
 
         private int x;

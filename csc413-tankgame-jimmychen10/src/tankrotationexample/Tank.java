@@ -1,15 +1,10 @@
 package tankrotationexample;
 
 
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author anthony-pc
- */
 public class Tank{
 
 
@@ -18,9 +13,9 @@ public class Tank{
     private int vx;
     private int vy;
     private int angle;
-
     private int health;
     private int lives;
+    private String player;
 
     private final int R = 2;
     private final int ROTATIONSPEED = 4;
@@ -30,14 +25,6 @@ public class Tank{
 
 
     private boolean collide_with_immovable_object = false;
-
-
-
-//    private BufferedImage img;
-//    private boolean UpPressed;
-//    private boolean DownPressed;
-//    private boolean RightPressed;
-//    private boolean LeftPressed;
 
 
     private BufferedImage img;
@@ -54,7 +41,7 @@ public class Tank{
     Rectangle tank_back_side;
 
 
-    Tank(int x, int y, int vx, int vy, int angle, BufferedImage img, BufferedImage bullet) {
+    Tank(int x,  int y, int vx, int vy, int angle,String player, BufferedImage img, BufferedImage bullet) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -62,12 +49,12 @@ public class Tank{
         this.img = img;
         this.bullet = bullet;
         this.angle = angle;
+        this.player = player;
         this.health = 100;
         this.lives = 3;
         this.tank_box = new Rectangle(this.x,this.y,this.img.getWidth(),this.img.getHeight());
         this.health_bar = new Rectangle(this.x,this.y+50,this.img.getWidth(),this.img.getHeight());
-//
-//        this.tank_box = new Rectangle(this.x,this.y,this.img.getWidth(),this.img.getHeight());
+
 
     }
 
@@ -106,8 +93,8 @@ public class Tank{
 
     void shootProjectile() {
         this.ShootPressed = true;
-        TRE.projectiles.add(new Projectile(x,y,vx,vy,angle,bullet));
-        System.out.println("projectile angle"+ angle);
+        TRE.projectiles.add(new Projectile(x,y,vx,vy,player,angle,bullet));
+        
 
     }
     void unProjectile() {
@@ -163,16 +150,11 @@ public class Tank{
         if(collide_with_immovable_object){
             x = x - 4*vx;
             y = y - 4*vy;
-//            x-=vx;
-//            y-=vy;
             collide_with_immovable_object = false;
         }else{
             x += vx;
             y += vy;
         }
-
-//        System.out.println("x:"+x);
-//        System.out.println("y"+ y);
         checkBorder();
 
     }
@@ -232,10 +214,6 @@ public class Tank{
 
     public BufferedImage getImg() { return this.img; }
 
-    @Override
-    public String toString() {
-        return "x=" + x + ", y=" + y + ", angle=" + angle;
-    }
 
 
     void drawImage(Graphics g) {
@@ -243,11 +221,6 @@ public class Tank{
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-        g.setColor(Color.red);
-        g.drawRect(x,y,this.img.getWidth(), this.img.getHeight());
-
-        g.setColor(Color.red);
-        g.drawRect(x,y,this.img.getWidth(), this.img.getHeight());
 
         if(this.health <= 0 ){
             if(this.lives>=0){
@@ -268,7 +241,6 @@ public class Tank{
         }
 
         g.fillRect(x,y+50,this.health/2, this.img.getHeight()/2/2);
-        // this.img.getWidth() ----> 50
         g.setColor(Color.cyan);
 
 

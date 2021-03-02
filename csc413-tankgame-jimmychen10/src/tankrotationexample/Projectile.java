@@ -13,7 +13,7 @@ public class Projectile {
     private int vx;
     private int vy;
     private int angle;
-
+    private String owner;
 
     private int damage ;
 
@@ -26,13 +26,15 @@ public class Projectile {
 
 
 
-    Projectile(int x, int y, int vx, int vy, int angle,BufferedImage img) {
+    Projectile(int x, int y, int vx, int vy, String owner ,  int angle, BufferedImage img) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
         this.img = img;
+        this.owner = owner;
         this.angle = angle;
+
 
         this.bullet = new Rectangle(this.x,this.y,this.img.getWidth(),this.img.getHeight());
         this.damage = 10;
@@ -63,6 +65,9 @@ public class Projectile {
 
     public int getDamage() {
         return damage;
+    }
+    public String getOwner() {
+        return this.owner;
     }
 
     @Override
